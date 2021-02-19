@@ -65,12 +65,31 @@ void loop() {
   int Z_PIN_Input = !digitalRead(Z_PIN);
   int static index = 0;
 
+if(X_PIN_Input)
+ {
+   pixels.setPixelColor(index,pixels.Color(10,10,10));
+   pixels.show();
+   index++;
+ }
+
+ if(Y_PIN_Input)
+ {
+   for(int i=0;i<NUMPIXELS;i++)
+   {
+    pixels.setPixelColor(i,pixels.Color(0,0,1));
+  }
+   pixels.show();
+   index++;
+ }
+
   if(Z_PIN_Input == true)
   {
     pixels.setPixelColor(index,pixels.Color(100,50,150));
     pixels.show();
     index++;
   }
+ 
+
 
   delay(50);
 
