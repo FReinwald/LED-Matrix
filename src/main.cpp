@@ -17,12 +17,22 @@ Adafruit_NeoPixel pixels(NUMPIXELS,C_PIN,NEO_GRB+NEO_KHZ800);
 //*******************************************************************
 void AllLED()
 {
-  delay(29);
+  pixels.begin();
+  for(int i=0;i<NUMPIXELS;i++)
+  {
+    pixels.setPixelColor(i,pixels.Color(100,100,50));
+  }
+  pixels.show();
 }
 
 void SingleLED()
 {
-  delay(29);
+  pixels.begin();
+  for(int i=0;i<NUMPIXELS;i++)
+  {
+    pixels.setPixelColor(i,pixels.Color(100,0,50));
+  }
+  pixels.show();
 }
 
 void ColorControl(int PIN)
@@ -52,6 +62,7 @@ void MainMenu()
   int MenuState=1;
   bool lastR = R_PIN_Input;
   bool lastB = B_PIN_Input;
+  bool lastUtil = Util_PIN_Input;
   //MainMenu Interface
   for(int i=0;i<NUMPIXELS;i++)
   {
@@ -60,9 +71,13 @@ void MainMenu()
   pixels.show();
 
 
-  do
+  while(true)
   {
-    if(R_PIN_Input)
+    int R_PIN_Input = !digitalRead(R_PIN);
+    int G_PIN_Input = !digitalRead(G_PIN);
+    int B_PIN_Input = !digitalRead(B_PIN);
+    int Util_PIN_Input = !digitalRead(UTIL_PIN);
+    if(R_PIN_Input && !lastR)
     {
       if(MenuState==1)
       {
@@ -77,7 +92,7 @@ void MainMenu()
       pixels.setPixelColor(MenuState,pixels.Color(10,0,10));
       pixels.show();
     }
-    if(!B_PIN_Input && !lastB)
+    if(B_PIN_Input && !lastB)
     {
       if(MenuState==MENUOPTIONS)
       {
@@ -88,16 +103,17 @@ void MainMenu()
         MenuState++;
       }
       //Move Cursor
-      pixels.setPixelColor(MenuState,pixels.Color(0,0,10));
+      pixels.setPixelColor(MenuState,pixels.Color(80,0,0));
       pixels.show();
     }
-    if(!Util_PIN_Input)
+    if(Util_PIN_Input && !lastUtil)
     {
       Program(MenuState);
     }
     lastR = R_PIN_Input;
     lastB = B_PIN_Input;
-  } while (Util_PIN_Input);
+    lastUtil = Util_PIN_Input;
+  }
 }
 //*******************************************************************
 void setup() {
