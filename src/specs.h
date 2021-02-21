@@ -18,7 +18,7 @@
 //Input Previous/Red
 #define R_PIN 7
 //Input PIN On/Off/Select
-#define UTIL_PIN 8
+#define UTIL_PIN 8              //Pin not working as intended
 //Number of Menu Options
 #define MENUOPTIONS 3
 
