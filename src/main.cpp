@@ -56,6 +56,7 @@ void MainMenu()
   int MenuState=1;
   int lastMenu = MENUOPTIONS;
   bool lastR = R_PIN_Input;
+  bool lastG = G_PIN_Input;
   bool lastB = B_PIN_Input;
   bool lastUtil = Util_PIN_Input;
   //MainMenu Interface
@@ -70,19 +71,16 @@ void MainMenu()
   while(true)
   {
     int R_PIN_Input = !digitalRead(R_PIN);
-//    int G_PIN_Input = !digitalRead(G_PIN);
+    int G_PIN_Input = !digitalRead(G_PIN);
     int B_PIN_Input = !digitalRead(B_PIN);
     int Util_PIN_Input = !digitalRead(UTIL_PIN);
     if(R_PIN_Input && !lastR)
     {
       if(MenuState==1)
-      {
         MenuState=MENUOPTIONS;
-      }
       else
-      {
         MenuState--;
-      }
+
       //Move Cursor
       pixels.begin();
       pixels.setPixelColor(MenuState,pixels.Color(80,0,0));
@@ -92,18 +90,20 @@ void MainMenu()
     if(B_PIN_Input && !lastB)
     {
       if(MenuState==MENUOPTIONS)
-      {
         MenuState=1;
-      }
       else
-      {
         MenuState++;
-      }
+
       //Move Cursor
       pixels.setPixelColor(MenuState,pixels.Color(80,0,0));
       pixels.setPixelColor(lastMenu,pixels.Color(0,0,50));
       pixels.show();
     }
+/*    if(G_PIN_Input && !lastG)
+    {
+      pixels.setPixelColor(5,pixels.Color(80,80,0));
+      pixels.show();
+    }*/
     if(Util_PIN_Input && !lastUtil)
     {
       pixels.setPixelColor(7,pixels.Color(80,0,0));
@@ -111,6 +111,7 @@ void MainMenu()
       Program(MenuState);
     }
     lastR = R_PIN_Input;
+    lastG = G_PIN_Input;
     lastB = B_PIN_Input;
     lastUtil = Util_PIN_Input;
     lastMenu = MenuState;
