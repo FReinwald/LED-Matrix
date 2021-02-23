@@ -12,14 +12,72 @@
   #include <avr/power.h>
 #endif*/
 int R =0;
+int lastMenu = MENUOPTIONS;
+bool lastR = R_PIN_Input;
+bool lastG = G_PIN_Input;
+bool lastB = B_PIN_Input;
+bool lastUtil = Util_PIN_Input;
 //*******************************************************************
 Adafruit_NeoPixel pixels(NUMPIXELS,C_PIN,NEO_GRB+NEO_KHZ800);
 //*******************************************************************
 void AllLED()
 {
+  int red = 0;
+  int green = 0;
+  int blue = 0;
+  int Util_PIN_Input = !digitalRead(UTIL_PIN);
   pixels.begin();
-  pixels.setPixelColor(1,pixels.Color(100,100,50));
-  pixels.show();
+  while(Util_PIN_Input)
+    Util_PIN_Input = !digitalRead(UTIL_PIN);
+  while(!Util_PIN_Input)
+  {
+    R_PIN_Input = !digitalRead(R_PIN);
+    G_PIN_Input = !digitalRead(G_PIN);
+    B_PIN_Input = !digitalRead(B_PIN);
+    Util_PIN_Input = !digitalRead(UTIL_PIN);
+/*    red++;
+    if(red>255)
+      red=0;
+    pixels.setPixelColor(10,pixels.Color(red,0,0));
+    pixels.show();
+    lastUtil = Util_PIN_Input;*/
+
+    while(R_PIN_Input)
+    {
+      red++;
+      if(red>255)
+        red=0;
+      for(int i; i<NUMPIXELS;i++)
+      {
+        pixels.setPixelColor(i,pixels.Color(red,green,blue));
+      }
+      pixels.show();
+    }
+    while(G_PIN_Input)
+    {
+      green++;
+      if(green>255)
+        green=0;      
+      for(int i; i<NUMPIXELS;i++)
+      {
+        pixels.setPixelColor(i,pixels.Color(red,green,blue));
+      }
+      pixels.show();
+    }
+    while(B_PIN_Input)
+    {
+      blue++;
+      if(blue>255)
+        blue=0;      
+      for(int i; i<NUMPIXELS;i++)
+      {
+        pixels.setPixelColor(i,pixels.Color(red,green,blue));
+      }
+      pixels.show();
+    }
+    lastUtil = Util_PIN_Input;
+  }
+  MainMenu();         //sends back to main menu on snd util key press
 }
 
 void SingleLED()
@@ -54,11 +112,6 @@ void MainMenu()
 {
   pixels.begin();
   int MenuState=1;
-  int lastMenu = MENUOPTIONS;
-  bool lastR = R_PIN_Input;
-  bool lastG = G_PIN_Input;
-  bool lastB = B_PIN_Input;
-  bool lastUtil = Util_PIN_Input;
   //MainMenu Interface
   for(int i=0;i<NUMPIXELS;i++)
   {

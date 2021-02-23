@@ -26,3 +26,9 @@ int R_PIN_Input = !digitalRead(R_PIN);
 int G_PIN_Input = !digitalRead(G_PIN);
 int B_PIN_Input = !digitalRead(B_PIN);
 int Util_PIN_Input = !digitalRead(UTIL_PIN);
+
+void AllLED();
+void SingleLED();
+void ColorControl(int PIN);
+void Program(int MenuState);
+void MainMenu();
