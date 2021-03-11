@@ -11,7 +11,7 @@
 /*#ifdef __AVR__
   #include <avr/power.h>
 #endif*/
-int R =0;
+
 int lastMenu = MENUOPTIONS;
 bool lastR = R_PIN_Input;
 bool lastG = G_PIN_Input;
@@ -27,23 +27,31 @@ void AllLED()
   int blue = 0;
   int Util_PIN_Input = !digitalRead(UTIL_PIN);
   pixels.begin();
+
   while(Util_PIN_Input)
     Util_PIN_Input = !digitalRead(UTIL_PIN);
+
   while(!Util_PIN_Input)
   {
     R_PIN_Input = !digitalRead(R_PIN);
     G_PIN_Input = !digitalRead(G_PIN);
     B_PIN_Input = !digitalRead(B_PIN);
     Util_PIN_Input = !digitalRead(UTIL_PIN);
-/*    red++;
+    /*red++;
     if(red>255)
       red=0;
     pixels.setPixelColor(10,pixels.Color(red,0,0));
-    pixels.show();
-    lastUtil = Util_PIN_Input;*/
+    pixels.show();*/
+    lastUtil = Util_PIN_Input;
 
-    while(R_PIN_Input)
+    if(R_PIN_Input && !lastR)
     {
+      red++;
+      if(red>255)
+      red=0;
+      pixels.setPixelColor(10,pixels.Color(red,0,0));       //For loop doesnt work properly
+      pixels.show();
+      /*while(true){
       red++;
       if(red>255)
         red=0;
@@ -51,9 +59,10 @@ void AllLED()
       {
         pixels.setPixelColor(i,pixels.Color(red,green,blue));
       }
-      pixels.show();
+      pixels.show();}*/
     }
-    while(G_PIN_Input)
+
+    if(G_PIN_Input && !lastG)
     {
       green++;
       if(green>255)
@@ -64,7 +73,8 @@ void AllLED()
       }
       pixels.show();
     }
-    while(B_PIN_Input)
+
+    if(B_PIN_Input && !lastB)
     {
       blue++;
       if(blue>255)
@@ -75,7 +85,11 @@ void AllLED()
       }
       pixels.show();
     }
+
     lastUtil = Util_PIN_Input;
+    lastR = R_PIN_Input;
+    lastG = G_PIN_Input;
+    lastB = B_PIN_Input;
   }
   MainMenu();         //sends back to main menu on snd util key press
 }
@@ -120,13 +134,15 @@ void MainMenu()
   pixels.setPixelColor(1,pixels.Color(80,0,0));
   pixels.show();
 
-
+  //Menu Loop to read Buttoninput
   while(true)
   {
     int R_PIN_Input = !digitalRead(R_PIN);
     int G_PIN_Input = !digitalRead(G_PIN);
     int B_PIN_Input = !digitalRead(B_PIN);
     int Util_PIN_Input = !digitalRead(UTIL_PIN);
+
+    //Moves cursor forward
     if(R_PIN_Input && !lastR)
     {
       if(MenuState==1)
@@ -140,6 +156,8 @@ void MainMenu()
       pixels.setPixelColor(lastMenu,pixels.Color(0,0,50));
       pixels.show();
     }
+
+    //Moves cursor backwards
     if(B_PIN_Input && !lastB)
     {
       if(MenuState==MENUOPTIONS)
@@ -152,17 +170,15 @@ void MainMenu()
       pixels.setPixelColor(lastMenu,pixels.Color(0,0,50));
       pixels.show();
     }
-/*    if(G_PIN_Input && !lastG)
-    {
-      pixels.setPixelColor(5,pixels.Color(80,80,0));
-      pixels.show();
-    }*/
+
+    //Confirms Menuselection
     if(Util_PIN_Input && !lastUtil)
     {
       pixels.setPixelColor(7,pixels.Color(80,0,0));
       pixels.show();
       Program(MenuState);
     }
+
     lastR = R_PIN_Input;
     lastG = G_PIN_Input;
     lastB = B_PIN_Input;
@@ -184,7 +200,6 @@ void setup() {
     pixels.setPixelColor(i,pixels.Color(40,0,50));
   }
   pixels.show();  
-  //pixels.clear();
 
   //Initialize Joystick Pins
   pinMode(R_PIN, INPUT_PULLUP);
@@ -194,16 +209,11 @@ void setup() {
 
 
   //Start Main-Menu
- 
   MainMenu(); 
 }
 
 
 void loop() {
-pixels.begin();
-  for(int i=0;i<NUMPIXELS;i++)
-  {
-    pixels.setPixelColor(i,pixels.Color(40,100,50));
-  }
-  pixels.show(); 
+  pixels.begin();
+  pixels.show();
 }
