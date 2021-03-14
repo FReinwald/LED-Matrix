@@ -37,49 +37,38 @@ void AllLED()
     G_PIN_Input = !digitalRead(G_PIN);
     B_PIN_Input = !digitalRead(B_PIN);
     Util_PIN_Input = !digitalRead(UTIL_PIN);
-    /*red++;
-    if(red>255)
-      red=0;
-    pixels.setPixelColor(10,pixels.Color(red,0,0));
-    pixels.show();*/
     lastUtil = Util_PIN_Input;
 
-    if(R_PIN_Input && !lastR)
+    if(R_PIN_Input)
     {
-      red++;
-      if(red>255)
-      red=0;
-      pixels.setPixelColor(10,pixels.Color(red,0,0));       //For loop doesnt work properly
-      pixels.show();
-      /*while(true){
-      red++;
-      if(red>255)
-        red=0;
-      for(int i; i<NUMPIXELS;i++)
+      if(red<255)
+        red++;
+
+      for(int i=0;i<NUMPIXELS;i++)
       {
-        pixels.setPixelColor(i,pixels.Color(red,green,blue));
+      pixels.setPixelColor(i,pixels.Color(red,green,blue));
       }
-      pixels.show();}*/
+      pixels.show();
     }
 
-    if(G_PIN_Input && !lastG)
+    if(G_PIN_Input)
     {
-      green++;
-      if(green>255)
-        green=0;      
-      for(int i; i<NUMPIXELS;i++)
+      if(green<255)
+        green++;
+   
+      for(int i=0; i<NUMPIXELS;i++)
       {
         pixels.setPixelColor(i,pixels.Color(red,green,blue));
       }
       pixels.show();
     }
 
-    if(B_PIN_Input && !lastB)
+    if(B_PIN_Input)
     {
-      blue++;
-      if(blue>255)
-        blue=0;      
-      for(int i; i<NUMPIXELS;i++)
+      if(blue<255)
+        blue++;
+     
+      for(int i=0; i<NUMPIXELS;i++)
       {
         pixels.setPixelColor(i,pixels.Color(red,green,blue));
       }
@@ -87,18 +76,84 @@ void AllLED()
     }
 
     lastUtil = Util_PIN_Input;
-    lastR = R_PIN_Input;
-    lastG = G_PIN_Input;
-    lastB = B_PIN_Input;
+    delay(20);
   }
-  MainMenu();         //sends back to main menu on snd util key press
+  MainMenu();         //sends back to main menu on util key press
 }
 
 void SingleLED()
 {
+  int red = 0;
+  int green = 0;
+  int blue = 0;
+  int Util_PIN_Input = !digitalRead(UTIL_PIN);
   pixels.begin();
-  pixels.setPixelColor(2,pixels.Color(100,0,50));
-  pixels.show();
+  int i = 0;
+
+  while(Util_PIN_Input)
+    Util_PIN_Input = !digitalRead(UTIL_PIN);
+
+  while(!Util_PIN_Input)
+  {
+    R_PIN_Input = !digitalRead(R_PIN);
+    G_PIN_Input = !digitalRead(G_PIN);
+    B_PIN_Input = !digitalRead(B_PIN);
+    Util_PIN_Input = !digitalRead(UTIL_PIN);
+    lastUtil = Util_PIN_Input;
+
+    if(R_PIN_Input)
+    {
+      if(red<255)
+        red++;
+
+      pixels.setPixelColor(i,pixels.Color(red,green,blue));
+
+      pixels.show();
+    }
+
+    if(G_PIN_Input)
+    {
+      if(green<255)
+        green++;
+
+        pixels.setPixelColor(i,pixels.Color(red,green,blue));
+
+      pixels.show();
+    }
+
+    if(B_PIN_Input)
+    {
+      if(blue<255)
+        blue++;
+
+        pixels.setPixelColor(i,pixels.Color(red,green,blue));
+ 
+      pixels.show();
+    }
+
+    if(G_PIN_Input && B_PIN_Input)        //next pixel by pressing G and B pin
+    {
+      i++;
+      if(i>NUMPIXELS)
+        i = 0;
+
+      delay(200);
+      red = 0;
+      green = 0;
+      blue = 0;
+    }
+
+    if(R_PIN_Input && G_PIN_Input)        //reset Pin color
+    {
+      delay(200);
+      red = 0;
+      green = 0;
+      blue = 0;
+    }
+
+    lastUtil = Util_PIN_Input;
+    delay(20);
+  }
 }
 
 void ColorControl(int PIN)
