@@ -8,7 +8,7 @@
 //PIN controlling the LEDs
 #define C_PIN 6
 //Number of LEDs
-#define NUMPIXELS 12
+#define NUMPIXELS 256
 //Delay between loops
 #define DELAYVAL 1000
 //Input Next/Blue
